@@ -45,21 +45,26 @@ const TotalPrice = styled.span`
 
 const EmptyList = styled.p`
     text-align: center;
-`
+`;
 
-export const Order = ({ orders }) => {
+export const Order = ({ orders, setOrders }) => {
 
     const total = orders.reduce((result, order) => 
         totalPriceItems(order) + result, 0)
 
     const totalCounter = orders.reduce((result, order) => order.count + result, 0);
 
+    const deleteItem = (order) => {
+        const newOrders = orders.filter(item => item !== order)
+        setOrders(newOrders)
+    }
+
     return (
         <OrderStyled>
             <OrderTitle>Ваш заказ</OrderTitle>
             <OrderContent>
                 {orders.length ? <OrderList>
-                    {orders.map(order => <OrderListItem order={order}/>)}
+                    {orders.map(order => <OrderListItem order={order} deleteItem={deleteItem}/>)}
                 </OrderList> :
                 <EmptyList>Список заказов пуст</EmptyList>}
             </OrderContent>
