@@ -67,6 +67,7 @@ export const Order = ({ orders, setOrders, setOpenItem, authentication, logIn, l
             email: authentication.email,
             order: newOrder,
         });
+        setOrders([]);
     }
 
     const total = orders.reduce((result, order) => 
@@ -101,7 +102,11 @@ export const Order = ({ orders, setOrders, setOpenItem, authentication, logIn, l
             </Total>
             <ButtonCheckout onClick={() => {
                 if (authentication) {
-                    sendOrder();
+                    if (orders.length !== 0) {
+                        sendOrder();
+                    } else {
+                        alert("Список заказов пуст");
+                    }
                 } else {
                     logIn();
                 }
