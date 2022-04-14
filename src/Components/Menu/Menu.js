@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useContext} from 'react';
 import styled from 'styled-components';
 import { ListItem } from './ListItem'
 import { Banner } from './Banner';
 import { useFetch } from '../Hooks/useFetch'
 import logoImg from '../../image/logo.svg'
+import { Context } from '../Functions/context'
 
 const MenuStyled = styled.main`
     background-color: #ccc;
@@ -25,8 +26,8 @@ const Preloader = styled.img`
         }
 `;
 
-export const Menu = ({ setOpenItem }) => {
-
+export const Menu = () => {
+    const { openItem: {setOpenItem }} = useContext(Context);
     const res = useFetch();
     const dbMenu = res.response;
 
