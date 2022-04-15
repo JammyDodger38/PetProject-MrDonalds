@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import styled from 'styled-components';
 import {ButtonCheckout} from '../Style/ButtonCheckout';
 import { OrderListItem } from './OrderListItem';
 import { totalPriceItems } from '../Functions/secondaryFunction';
 import { formatCurrency } from '../Functions/secondaryFunction';
+import { Context } from '../Functions/context';
+import {OrderTitle, Total, TotalPrice } from '../Style/Popup'
 
 const OrderStyled = styled.section`
     position: fixed;
@@ -18,47 +20,22 @@ const OrderStyled = styled.section`
     padding: 20px;
 `
 
-export const OrderTitle = styled.h2`
-    text-align: center;
-    margin-bottom: 30px;
-`
-
 const OrderContent = styled.div`
     flex-grow: 1;
 `;
 
 const OrderList = styled.ul``;
 
-export const Total = styled.div`
-    display: flex;
-    margin-bottom: 0 35px 30px;
-    & span:first-child {
-        flex-grow: 1;
-    }
-`;
-
-export const TotalPrice = styled.span`
-    text-align: right;
-    min-width: 65px;
-    margin-left: 20px;
-`;
-
 const EmptyList = styled.p`
     text-align: center;
 `;
 
+export const Order = () => {
+    const {auth: { authentication, logIn }} = useContext(Context);
+    const {orders: { orders, setOrders}} = useContext(Context);
+    const {openItem: { setOpenItem }} = useContext(Context);
+    const {orderConfirm: { setOpenOrderConfirm }} = useContext(Context);
 
-
-export const Order = ({ 
-    orders, 
-    setOrders, 
-    setOpenItem, 
-    authentication, 
-    logIn,
-    setOpenOrderConfirm
-}) => {
-    
-    
     const total = orders.reduce((result, order) => 
         totalPriceItems(order) + result, 0);
 
@@ -84,23 +61,29 @@ export const Order = ({
                 </OrderList> :
                 <EmptyList>Список заказов пуст</EmptyList>}
             </OrderContent>
-            <Total>
-                <span>Итого</span>
-                <span>{totalCounter}</span>
-                <TotalPrice>{formatCurrency(total)}</TotalPrice>
-            </Total>
-            <ButtonCheckout onClick={() => {
-                if (authentication) {
-                    if (orders.length !== 0) {
-                        setOpenOrderConfirm(true);
+            {orders.length ? 
+                <>
+                    <Total>
+                    <span>Итого</span>
+                    <span>{totalCounter}</span>
+                    <TotalPrice>{formatCurrency(total)}</TotalPrice>
+                </Total>
+                <ButtonCheckout onClick={() => {
+                    if (authentication) {
+                        if (orders.length !== 0) {
+                            setOpenOrderConfirm(true);
+                        } else {
+                            alert("Список заказов пуст");
+                        }
                     } else {
-                        alert("Список заказов пуст");
+                        logIn();
                     }
-                } else {
-                    logIn();
                 }
+                }>Оформить</ButtonCheckout>
+                </>
+                 : false
             }
-            }>Оформить</ButtonCheckout>
+            
         </OrderStyled>
     )
 }
