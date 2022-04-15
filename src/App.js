@@ -13,6 +13,7 @@ import { useAuth } from './Components/Hooks/useAuth';
 import { useTitle } from './Components/Hooks/useTitle';
 import { OrderConfirm } from './Components/Order/OrderConfirm';
 import { useOrderConfirm } from './Components/Hooks/useOrderConfirm';
+import { useOpenOrder } from './Components/Hooks/useOpenOrder'
 import { Context } from './Components/Functions/context';
 
 const firebaseConfig = {
@@ -32,6 +33,7 @@ function App() {
   const openItem = useOpenItem();
   const orders = useOrders();
   const orderConfirm = useOrderConfirm();
+  const openOrder = useOpenOrder()
   useTitle(openItem.openItem);
 
   return (
@@ -40,10 +42,11 @@ function App() {
       openItem,
       orders,
       orderConfirm,
+      openOrder,
     }}>
       <GlobalStyle/>
       <NavBar/>
-      <Order/>
+      { openOrder.openOrder && <Order/>}
       <Menu/>
       { openItem.openItem && <ModalItem/>}
       {orderConfirm.openOrderConfirm && 
